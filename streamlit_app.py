@@ -1,5 +1,5 @@
 import streamlit as st
-from zhipuai_llm import ZhipuAILLM
+from zhipuai import ZhipuAILLM
 import os
 from langchain_core.output_parsers import StrOutputParser
 from langchain.prompts import PromptTemplate
