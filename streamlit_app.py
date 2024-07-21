@@ -78,7 +78,6 @@ def get_qa_chain(question:str,zhipuai_api_key:str):
 # Streamlit 应用程序界面
 def main():
     st.title('🦜🔗 动手学大模型应用开发')
-    zhipuai_api_key = zhipuai_api_key('ZHIPU API KEY',type = 'passwaord')
     #openai_api_key = st.sidebar.text_input('OpenAI API Key', type='password')
 
     # 添加一个选择按钮来选择不同的模型
