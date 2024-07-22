@@ -16,7 +16,8 @@ _ = load_dotenv(find_dotenv())    # read local .env file
 
 #export OPENAI_API_KEY=
 #os.environ["OPENAI_API_BASE"] = 'https://api.chatgptid.net/v1'
-zhipuai_api_key1 = os.environ['ZHIPUAI_API_KEY1']
+zhipuai_api_key = os.environ['ZHIPUAI_API_KEY']
+zhipuai_api_key2 = os.environ['ZHIPUAI_API_KEY2']
 
 def generate_response(input_text, zhipuai_api_key2):
     llm = ChatZhipuAI(model="glm-4", temperature=0.7, zhipuai_api_key=zhipuai_api_key2)
@@ -78,7 +79,7 @@ def get_qa_chain(question:str,zhipuai_api_key2:str):
 def main():
     st.title('🦜🔗 动手学大模型应用开发')
     #openai_api_key = st.sidebar.text_input('OpenAI API Key', type='password')
-    zhipuai_api_key2 =st.sidebar.text_input('ZHIPU API KEY', type = 'password')
+    #zhipuai_api_key2 =st.sidebar.text_input('ZHIPU API KEY', type = 'password')
 
     # 添加一个选择按钮来选择不同的模型
     #selected_method = st.sidebar.selectbox("选择模式", ["qa_chain", "chat_qa_chain", "None"])
