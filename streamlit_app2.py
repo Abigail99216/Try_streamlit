@@ -18,7 +18,48 @@ _ = load_dotenv(find_dotenv())    # read local .env file
 #os.environ["OPENAI_API_BASE"] = 'https://api.chatgptid.net/v1'
 zhipuai_api_key1 = os.environ['ZHIPUAI_API_KEY1']
 
+# Streamlit 应用程序界面
+def main():
+    st.title('🦜🔗 动手学大模型应用开发')
+    #openai_api_key = st.sidebar.text_input('OpenAI API Key', type='password')
+    zhipuai_api_key2 =st.sidebar.text_input('ZHIPU API KEY', type = 'password')
 
+    # 添加一个选择按钮来选择不同的模型
+    #selected_method = st.sidebar.selectbox("选择模式", ["qa_chain", "chat_qa_chain", "None"])
+    selected_method = st.radio(
+        "你想选择哪种模式进行对话？",
+        ["None", "qa_chain", "chat_qa_chain"],
+        captions = ["不使用检索问答的普通模式", "不带历史记录的检索问答模式", "带历史记录的检索问答模式"])
+
+    # 用于跟踪对话历史
+    if 'messages' not in st.session_state:
+        st.session_state.messages = []
+
+    messages = st.container(height=300)
+    if prompt := st.chat_input("Say something"):
+        # 将用户输入添加到对话历史中
+        st.session_state.messages.append({"role": "user", "text": prompt})
+
+        if selected_method == "None":
+            # 调用 respond 函数获取回答
+            answer = generate_response(prompt, zhipuai_api_key1)
+        elif selected_method == "qa_chain":
+            answer = get_qa_chain(prompt,zhipuai_api_key1)
+        elif selected_method == "chat_qa_chain":
+            answer = get_chat_qa_chain(prompt,zhipuai_api_key1)
+
+        # 检查回答是否为 None
+        if answer is not None:
+            # 将LLM的回答添加到对话历史中
+            st.session_state.messages.append({"role": "assistant", "text": answer})
+
+        # 显示整个对话历史
+        for message in st.session_state.messages:
+            if message["role"] == "user":
+                messages.chat_message("user").write(message["text"])
+            elif message["role"] == "assistant":
+                messages.chat_message("assistant").write(message["text"])   
+                
 def generate_response(input_text, zhipuai_api_key):
     llm = ChatZhipuAI(model = "glm-4", temperature=0.7, zhipuai_api_key=zhipuai_api_key2)
     output = llm.invoke(input_text)
@@ -73,49 +114,6 @@ def get_qa_chain(question:str,zhipuai_api_key:str):
                                        chain_type_kwargs={"prompt":QA_CHAIN_PROMPT})
     result = qa_chain({"query": question})
     return result["result"]
-
-
-# Streamlit 应用程序界面
-def main():
-    st.title('🦜🔗 动手学大模型应用开发')
-    #openai_api_key = st.sidebar.text_input('OpenAI API Key', type='password')
-    zhipuai_api_key2 =st.sidebar.text_input('ZHIPU API KEY', type = 'password')
-
-    # 添加一个选择按钮来选择不同的模型
-    #selected_method = st.sidebar.selectbox("选择模式", ["qa_chain", "chat_qa_chain", "None"])
-    selected_method = st.radio(
-        "你想选择哪种模式进行对话？",
-        ["None", "qa_chain", "chat_qa_chain"],
-        captions = ["不使用检索问答的普通模式", "不带历史记录的检索问答模式", "带历史记录的检索问答模式"])
-
-    # 用于跟踪对话历史
-    if 'messages' not in st.session_state:
-        st.session_state.messages = []
-
-    messages = st.container(height=300)
-    if prompt := st.chat_input("Say something"):
-        # 将用户输入添加到对话历史中
-        st.session_state.messages.append({"role": "user", "text": prompt})
-
-        if selected_method == "None":
-            # 调用 respond 函数获取回答
-            answer = generate_response(prompt, zhipuai_api_key1)
-        elif selected_method == "qa_chain":
-            answer = get_qa_chain(prompt,zhipuai_api_key1)
-        elif selected_method == "chat_qa_chain":
-            answer = get_chat_qa_chain(prompt,zhipuai_api_key1)
-
-        # 检查回答是否为 None
-        if answer is not None:
-            # 将LLM的回答添加到对话历史中
-            st.session_state.messages.append({"role": "assistant", "text": answer})
-
-        # 显示整个对话历史
-        for message in st.session_state.messages:
-            if message["role"] == "user":
-                messages.chat_message("user").write(message["text"])
-            elif message["role"] == "assistant":
-                messages.chat_message("assistant").write(message["text"])   
 
 
 if __name__ == "__main__":
