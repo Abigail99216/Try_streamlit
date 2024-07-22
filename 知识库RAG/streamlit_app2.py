@@ -26,8 +26,6 @@ def generate_response(input_text, zhipuai_api_key2):
         output_parser = StrOutputParser()
         output = output_parser.invoke(output)
         return output
-    else:
-        return "Sorry, I couldn't generate a response at the moment. Please try again later."
 
 def get_vectordb():
     # 定义 Embeddings
