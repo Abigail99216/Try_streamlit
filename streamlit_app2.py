@@ -18,7 +18,7 @@ _ = load_dotenv(find_dotenv())    # read local .env file
 #os.environ["OPENAI_API_BASE"] = 'https://api.chatgptid.net/v1'
 zhipuai_api_key1 = os.environ['ZHIPUAI_API_KEY1']
                 
-def generate_response(input_text, zhipuai_api_key):
+def generate_response(input_text, zhipuai_api_key2):
     llm = ChatZhipuAI(model = "glm-4", temperature=0.7, zhipuai_api_key=zhipuai_api_key2)
     output = llm.invoke(input_text)
     output_parser = StrOutputParser()
